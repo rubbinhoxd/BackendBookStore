@@ -1,0 +1,11 @@
+import backend.Livro
+
+model{
+    Livro livro
+}
+
+json{
+    nome livro.nome
+    numPaginas livro.numPaginas
+
+}

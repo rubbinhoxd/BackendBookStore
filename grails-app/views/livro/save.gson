@@ -1,0 +1,12 @@
+import backend.Livro
+
+model{
+    //modelo que vou receber para renderizar o json
+    Livro livro
+}
+
+json{
+    livro g.render(template: "livro", model: ["livro": livro])
+    //o template é o json que vou renderizar
+}
+
