@@ -3,7 +3,7 @@ package backend
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
-class AutorServiceSpec extends Specification implements ServiceUnitTest<AutorService>{
+class AutorServiceSpec extends Specification implements ServiceUnitTest<EditoraService.AutorService>{
 
     def setup() {
     }

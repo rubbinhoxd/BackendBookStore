@@ -1,5 +1,7 @@
 package backend
 
+import grails.gorm.transactions.Transactional
+
 import javax.xml.bind.ValidationException
 import static org.springframework.http.HttpStatus.*
 
@@ -15,10 +17,15 @@ class LivroController {
         params.max = Math.min(max ?: 10, 100);
         respond livroService.list(params), model: [livroCount: livroService.count()];
     }
+    @Transactional
     //salva livro (post)
     def save(Livro livro){
         if(livro == null){
             render status: NOT_FOUND
+            return
+        }
+        if (livro.hasErrors()) {
+            respond livro.errors
             return
         }
         try {
@@ -34,10 +41,15 @@ class LivroController {
     def show(Long id){
         respond livroService.get(id)
     }
+    @Transactional
     //put atualiza livro
     def update(Livro livro){
         if(livro == null){
             render status: NOT_FOUND
+            return
+        }
+        if (livro.hasErrors()) {
+            respond livro.errors
             return
         }
         try{
@@ -51,7 +63,7 @@ class LivroController {
     }
 
     def delete(Long id){
-        if(id == null){
+        if(id == null || livroService.delete(id) == null){
             render status: NOT_FOUND
             return
         }

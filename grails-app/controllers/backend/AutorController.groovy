@@ -1,5 +1,7 @@
 package backend
 
+import grails.gorm.transactions.Transactional
+
 import javax.xml.bind.ValidationException
 import static org.springframework.http.HttpStatus.*
 
@@ -16,9 +18,14 @@ class AutorController {
         respond autorService.list(params), model: [autorCount: autorService.count()];
     }
     //salva autor (post)
+    @Transactional
     def save(Autor autor){
         if(autor == null){
             render status: NOT_FOUND
+            return
+        }
+        if (autor.hasErrors()) {
+            respond autor.errors
             return
         }
         try {
@@ -34,10 +41,16 @@ class AutorController {
     def show(Long id){
         respond autorService.get(id)
     }
+
     //put atualiza autor
+    @Transactional
     def update(Autor autor){
         if(autor == null){
             render status: NOT_FOUND
+            return
+        }
+        if (autor.hasErrors()) {
+            respond autor.errors
             return
         }
         try{
@@ -49,9 +62,9 @@ class AutorController {
         }
         respond autor, [status: OK, view:"show"]
     }
-
+    @Transactional
     def delete(Long id){
-        if(id == null){
+        if(id == null || autorService.delete(id) == null){
             render status: NOT_FOUND
             return
         }
@@ -59,6 +72,4 @@ class AutorController {
         println("Autor excluído")
         render status: NO_CONTENT
     }
-
-
 }

@@ -2,18 +2,31 @@ package backend
 
 import grails.gorm.services.Service
 
-@Service (Livro)
-interface LivroService {
+import javax.transaction.Transactional
 
-    Livro get(Serializable id)
+@Transactional
+class LivroService {
 
-    List<Livro> list(Map args)
+    Livro get(Serializable id){
+        return Livro.get(id)
+    }
 
-    Long count()
+    List<Livro> list(Map args){
+        Livro.list();
+    }
 
-    Livro save(Livro livro)
+    Long count(){
+        Livro.count();
+    }
 
-    void delete(Serializable id)
+    Livro save(Livro livro){
+        livro.save(flush:true, failOnError: true)
+    }
+
+    void delete(Serializable id){
+        def livro = Livro.get(id)
+        livro.delete();
+    }
 
 
 }

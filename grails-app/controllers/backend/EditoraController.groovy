@@ -1,15 +1,15 @@
 package backend
 
+import grails.validation.ValidationException
 import javax.xml.bind.ValidationException
-
-
-
 
 
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.NOT_FOUND
 import static org.springframework.http.HttpStatus.NO_CONTENT
 import static org.springframework.http.HttpStatus.OK
+
+import grails.gorm.transactions.Transactional
 
 class EditoraController {
 
@@ -30,8 +30,20 @@ class EditoraController {
             render status: NOT_FOUND
             return
         }
+        if (editora.hasErrors()) {
+            respond editora.errors
+            return
+        }
         try {
-            editoraService.save(editora)
+            if(editora.validate()){
+                editoraService.save(editora)
+            }else{
+                editora.errors.allErrors
+                editora.errors.errorCount
+                println editora.errors.errorCount
+                println editora.errors.allErrors
+            }
+
         }
         catch (ValidationException e) {
             respond editora.errors, view: 'create'
@@ -39,15 +51,21 @@ class EditoraController {
         }
         respond editora, [status: CREATED, view: "show"]
     }
+
     //mostrar editora pelo id
     def show(Long id){
         respond editoraService.get(id)
     }
     //put atualiza editora
+    @Transactional
     def update(Editora editora){
         println(params)
         if(editora == null){
             render status: NOT_FOUND
+            return
+        }
+        if (editora.hasErrors()) {
+            respond editora.errors
             return
         }
         try{
@@ -59,8 +77,9 @@ class EditoraController {
         }
         respond editora, [status: OK, view:"show"]
     }
+    @Transactional
     def delete(Long id){
-        if(id == null){
+        if(id == null || editoraService.delete(id) == null){
             render status: NOT_FOUND
             return
         }

@@ -2,18 +2,38 @@ package backend
 
 import grails.gorm.services.Service
 
-@Service (Autor)
-interface AutorService {
+import javax.transaction.Transactional
 
-    Autor get(Serializable id)
+@Transactional
+class AutorService {
 
-    List<Autor> list(Map args)
+    Autor get(Serializable id){
+        return Autor.get(id);
+    }
 
-    Long count()
+    List<Autor> list(Map args){
+        Autor.list();
+    }
 
-    Autor save(Autor autor)
+    Long count(){
+        Autor.count();
+    }
 
-    void delete(Serializable id)
+    Autor save(Autor autor){
+        autor.save(flush:true, failOnError: true)
+    }
+
+    void delete(Serializable id){
+        def autor = Autor.get(id)
+        autor.delete();
+    }
 
 
 }
+
+
+
+
+
+
+

@@ -8,5 +8,8 @@ class Autor {
 
 
     static constraints = {
+        livros nullable: true, blank: true //podemos criar autores sem livros linkados a ele
+        nome nullable: false, blank: false
+        dataNasc nullable: false, blank: false
     }
 }

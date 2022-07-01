@@ -1,22 +1,32 @@
 package backend
 
-import grails.gorm.services.Service
+import javax.transaction.Transactional
 
 
-@Service (Editora)
-interface EditoraService {
+@Transactional
+class EditoraService {
 
-    Editora get(Serializable id)
+    Editora get(Serializable id){
+        return Editora.get(id);
+    }
 
-    List<Editora> list(Map args)
+    List<Editora> list(Map args){
+        return  Editora.list();
+    }
 
-    Long count()
+    Long count(){
+        return Editora.count();
+    }
 
-    Editora save(Editora editora)
+    Editora save(Editora editora){
+        return editora.save(validate: false)
+    }
 
-    void delete(Serializable id)
-
-
-
-
+    void delete(Serializable id){
+        /*
+        def editora = Editora.get(id)
+        editora.delete(flush: true);
+        */
+        Editora.read(id)?.delete(failOnError: true)
+    }
 }
